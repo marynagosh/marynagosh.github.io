@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Насті та Руслану — Гороскоп на перший рік</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#121127;
+    --void-deep:#0a0919;
+    --card:#1c1a3e;
+    --card-hi:#242151;
+    --ink:#f4eee0;
+    --ink-dim:rgba(244,238,224,0.62);
+    --ink-faint:rgba(244,238,224,0.38);
+    --gold:#c9a45c;
+    --gold-bright:#e2c07f;
+    --gold-dim:rgba(201,164,92,0.35);
+    --aquarius:#8ba0d9;
+    --aquarius-ink:#1b2440;
+    --leo:#dd9a4e;
+    --leo-ink:#3a2308;
+    --line:rgba(244,238,224,0.14);
+    --shadow:rgba(0,0,0,0.45);
+    --radius:22px;
+    --maxw:640px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:var(--void);
+    color:var(--ink);
+    font-family:'Manrope',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+
+  ::selection{background:var(--gold-dim);color:var(--ink);}
+
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  :focus-visible{
+    outline:2px solid var(--gold-bright);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  /* ---------- starfield ---------- */
+  .stars{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(139,160,217,0.10), transparent 55%),
+      radial-gradient(ellipse at 82% 78%, rgba(221,154,78,0.08), transparent 55%),
+      var(--void-deep);
+    background-color:var(--void);
+  }
+  .stars::before, .stars::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      radial-gradient(1.6px 1.6px at 12% 22%, var(--ink) 0%, transparent 60%),
+      radial-gradient(1.2px 1.2px at 27% 68%, var(--ink) 0%, transparent 60%),
+      radial-gradient(1.8px 1.8px at 41% 8%, var(--gold-bright) 0%, transparent 60%),
+      radial-gradient(1.2px 1.2px at 58% 45%, var(--ink) 0%, transparent 60%),
+      radial-gradient(1.5px 1.5px at 73% 82%, var(--ink) 0%, transparent 60%),
+      radial-gradient(1.2px 1.2px at 88% 30%, var(--gold-bright) 0%, transparent 60%),
+      radial-gradient(1.4px 1.4px at 6% 88%, var(--ink) 0%, transparent 60%),
+      radial-gradient(1.3px 1.3px at 95% 60%, var(--ink) 0%, transparent 60%),
+      radial-gradient(1.6px 1.6px at 65% 15%, var(--ink) 0%, transparent 60%),
+      radial-gradient(1.2px 1.2px at 34% 92%, var(--ink) 0%, transparent 60%);
+    opacity:0.55;
+  }
+  .stars::after{
+    background-position: 50px 80px, 0 0, 120px 0, 0 60px, 90px 10px, 0 0, 0 0, 0 0, 0 0, 0 0;
+    opacity:0.3;
+  }
+
+  /* ---------- scroll container ---------- */
+  .snap-container{
+    position:relative;
+    z-index:1;
+    height:100vh;
+    height:100dvh;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    scroll-snap-type:y mandatory;
+    scroll-behavior:smooth;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .snap-container{scroll-behavior:auto;}
+  }
+
+  section{
+    min-height:100vh;
+    min-height:100dvh;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:calc(env(safe-area-inset-top) + 28px) 20px calc(env(safe-area-inset-bottom) + 28px);
+    position:relative;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    text-align:center;
+    flex-direction:column;
+  }
+  .hero-inner{max-width:520px;display:flex;flex-direction:column;align-items:center;gap:18px;}
+  .hero-eyebrow{
+    font-family:'Cormorant Garamond',serif;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    font-size:0.72rem;
+    color:var(--gold);
+  }
+  .hero-glyphs{
+    font-size:1.1rem;
+    letter-spacing:0.5em;
+    color:var(--ink-faint);
+    padding-left:0.5em;
+  }
+  .hero h1{
+    font-family:'Cinzel Decorative',serif;
+    font-weight:700;
+    font-size:clamp(2.1rem, 9vw, 3.6rem);
+    line-height:1.15;
+    margin:6px 0 0;
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold) 60%, #a5813f);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    text-shadow:0 0 40px rgba(201,164,92,0.25);
+  }
+  .hero-sub{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:clamp(1.05rem,3.4vw,1.35rem);
+    color:var(--ink-dim);
+    line-height:1.5;
+    max-width:38ch;
+  }
+  .hero-divider{
+    width:64px;height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin:6px 0;
+  }
+  .hero-cta{
+    margin-top:10px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 30px;
+    border-radius:999px;
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color:#241a06;
+    font-weight:700;
+    font-size:0.98rem;
+    text-decoration:none;
+    letter-spacing:0.02em;
+    box-shadow:0 10px 30px rgba(201,164,92,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .hero-cta:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(201,164,92,0.35);}
+  .hero-cta svg{width:18px;height:18px;flex-shrink:0;}
+  .hero-note{
+    font-size:0.78rem;
+    color:var(--ink-faint);
+    max-width:32ch;
+    line-height:1.5;
+  }
+  .hero-scrolldown{
+    position:absolute;
+    bottom:calc(env(safe-area-inset-bottom) + 18px);
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    color:var(--ink-faint);
+    font-size:0.68rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    font-family:'Cormorant Garamond',serif;
+  }
+  .hero-scrolldown .chevron{
+    width:11px;height:11px;
+    border-right:1px solid var(--gold);
+    border-bottom:1px solid var(--gold);
+    transform:rotate(45deg);
+    animation:bob 2.2s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{transform:rotate(45deg) translate(0,0);opacity:0.5;}
+    50%{transform:rotate(45deg) translate(4px,4px);opacity:1;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .hero-scrolldown .chevron{animation:none;}
+  }
+
+  /* ---------- month cards ---------- */
+  .card{flex-direction:column;}
+  .card-frame{
+    position:relative;
+    width:100%;
+    max-width:var(--maxw);
+    background:linear-gradient(175deg, var(--card-hi), var(--card));
+    border-radius:var(--radius);
+    padding:34px 24px 28px;
+    box-shadow:0 30px 60px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .card-frame::before{
+    content:"";
+    position:absolute;
+    inset:10px;
+    border:1px solid var(--gold-dim);
+    border-radius:16px;
+    pointer-events:none;
+  }
+  .corner{
+    position:absolute;
+    width:8px;height:8px;
+    border:1px solid var(--gold);
+    transform:rotate(45deg);
+    background:var(--void);
+  }
+  .corner.tl{top:5px;left:5px;}
+  .corner.tr{top:5px;right:5px;}
+  .corner.bl{bottom:5px;left:5px;}
+  .corner.br{bottom:5px;right:5px;}
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .card-index{
+    font-family:'Cormorant Garamond',serif;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-size:0.68rem;
+    color:var(--gold);
+  }
+  .card-transit{
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:0.78rem;
+    color:var(--ink-faint);
+    text-align:right;
+  }
+
+  .card-month{
+    font-family:'Cinzel Decorative',serif;
+    font-weight:700;
+    font-size:clamp(1.7rem,7vw,2.5rem);
+    color:var(--gold-bright);
+    line-height:1.05;
+    margin:0;
+  }
+  .card-year{
+    font-family:'Cormorant Garamond',serif;
+    font-size:0.95rem;
+    color:var(--ink-faint);
+    letter-spacing:0.12em;
+    margin:2px 0 16px;
+  }
+
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 12px;
+    border-radius:999px;
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .badge--birthday{background:linear-gradient(180deg, var(--gold-bright), var(--gold));color:#241a06;}
+  .badge--eclipse{
+    background:transparent;
+    border:1px solid var(--gold-dim);
+    color:var(--gold);
+  }
+  .badge--eclipse .eclipse-icon{
+    width:12px;height:12px;
+    border-radius:50%;
+    background:var(--gold);
+    box-shadow:4px 0 0 -1px var(--card) inset;
+    position:relative;
+    display:inline-block;
+  }
+  .badge--eclipse .eclipse-icon::after{
+    content:"";
+    position:absolute;
+    top:0;left:3px;
+    width:12px;height:12px;
+    border-radius:50%;
+    background:var(--card-hi);
+  }
+
+  .tag{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:'Manrope',sans-serif;
+    font-size:0.68rem;
+    font-weight:800;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:7px;
+    margin-bottom:8px;
+  }
+  .tag--nastya{background:var(--aquarius);color:var(--aquarius-ink);}
+  .tag--ruslan{background:var(--leo);color:var(--leo-ink);}
+  .tag--razom{background:transparent;border:1px solid var(--gold-dim);color:var(--gold);}
+
+  .block{margin-bottom:16px;}
+  .block p{
+    margin:0;
+    font-size:0.98rem;
+    line-height:1.62;
+    color:var(--ink);
+  }
+
+  .divider{
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--line), transparent);
+    margin:20px 0;
+  }
+
+  .strip{
+    background:rgba(201,164,92,0.08);
+    border:1px solid var(--gold-dim);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:12px;
+  }
+  .strip-label{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;
+    font-size:0.82rem;
+    color:var(--gold);
+    margin-bottom:5px;
+  }
+  .strip p{margin:0;font-size:0.88rem;line-height:1.55;color:var(--ink-dim);}
+  .strip.soundtrack{background:transparent;border:none;border-top:1px dashed var(--gold-dim);border-radius:0;padding:12px 2px 0;margin-bottom:0;}
+
+  .icon{width:14px;height:14px;flex-shrink:0;}
+
+  /* ---------- moon nav ---------- */
+  .moon-nav{
+    position:fixed;
+    z-index:5;
+    display:flex;
+    gap:9px;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:calc(env(safe-area-inset-bottom) + 10px);
+    background:rgba(10,9,25,0.55);
+    backdrop-filter:blur(6px);
+    padding:8px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+  }
+  .moon-dot{
+    appearance:none;
+    background:none;
+    border:none;
+    padding:4px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0.5;
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .moon-dot.active{opacity:1;transform:scale(1.18);}
+  .moon-disc{
+    width:11px;height:11px;
+    border-radius:50%;
+    background:var(--gold-bright);
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 0 0 1px rgba(201,164,92,0.4);
+  }
+  .moon-disc::after{
+    content:"";
+    position:absolute;
+    top:-15%;left:-15%;
+    width:130%;height:130%;
+    border-radius:50%;
+    background:var(--void);
+    transform:translateX(var(--shift,0%));
+  }
+
+  @media (min-width:860px){
+    .moon-nav{
+      left:auto;
+      right:26px;
+      top:50%;
+      bottom:auto;
+      transform:translateY(-50%);
+      flex-direction:column;
+    }
+    .card-frame{padding:52px 52px 44px;}
+    .block p{font-size:1.05rem;}
+    .hero h1{font-size:clamp(3rem,6vw,4.4rem);}
+  }
+
+  .credit{
+    margin-top:22px;
+    text-align:center;
+    font-size:0.7rem;
+    color:var(--ink-faint);
+    font-family:'Cormorant Garamond',serif;
+    letter-spacing:0.08em;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" aria-hidden="true"></div>
+
+<nav class="moon-nav" aria-label="Навігація по місяцях" id="moonNav"></nav>
+
+<div class="snap-container" id="scrollRoot">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">карта нульова · пролог</div>
+      <div class="hero-glyphs">♒ &nbsp;✦&nbsp; ♌</div>
+      <h1>Насті<br>та Руслану</h1>
+      <div class="hero-divider"></div>
+      <p class="hero-sub">Дванадцять карт, дванадцять місяців першого року шлюбу — і трохи порад від планет, які, здається, теж були на весіллі.</p>
+      <a class="hero-cta" href="https://open.spotify.com/playlist/6oja7fLjJGmZgiPOkwSTZ5?si=z_7O8GawQTiZdL3lkX1yEg&utm_source=copy-link&pi=oRaksUhyS6q7G" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" stroke="currentColor" stroke-width="1.6"/><path d="M6.5 9.5c3.5-1 8-0.6 10.5 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 12.7c3-0.9 6.6-0.5 9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M7.5 15.7c2.4-0.6 5.2-0.3 7 0.8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Плейлист на весь рік
+      </a>
+      <p class="hero-note">Порада: вмикати відповідний трек кожного місяця — так пророцтво працює краще.</p>
+    </div>
+    <div class="hero-scrolldown"><span>гортайте карти</span><span class="chevron"></span></div>
+  </section>
+
+  <!-- MONTH 1 -->
+  <section class="card" id="m1">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 01 / 12</span>
+        <span class="card-transit">Уран ℞ · 5° Близнюків</span>
+      </div>
+      <h2 class="card-month">Вересень</h2>
+      <p class="card-year">2026</p>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Початок шлюбного життя, коли ви так довго разом, очікувано гладкий, і планети не додають драми в цей спокійний фундамент.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--nastya">♒ Настя</span>
+        <p>Важливим буде Уран — планета інновацій і раптових змін, що стане ретроградним 10 вересня (5° Близнюків) у тригоні до Водолія. Настане час оцінити всі ідеї, які приходили в голову влітку, і діяти лише за тими планами, які й досі відгукуватимуться пізніше того ж місяця. Хотілося сходити на курс із блокування конкурентів із неймовірними інсайтами на LinkedIn? Можливо, й варто. Раптово почала мріяти перефарбуватися в темніший колір? Точно не зараз 🫣</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Вплине Хірон, що входить у ретроградний рух в Овні 17 вересня у тригоні до Лева, а це додасть упевненості в собі. Самооцінка буде підтримана і Юпітером, який щойно утворив тригон із Сатурном 31 серпня. Простими словами: якщо й просити про перегляд зарплати, то прям зараз. Юпітер допомагає запустити фінансовий потік, струсити пил з амбіцій і знову зустріти давню подругу Удачу, яка колись порекомендувала вам двом встановити Nimses.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Уран любить сюрпризи різного характеру, тому не підходьте близько до гусей.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>The Cure — Friday I'm in Love</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 2 -->
+  <section class="card" id="m2">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 02 / 12</span>
+        <span class="card-transit">Венера ℞ · Скорпіон → Терези</span>
+      </div>
+      <h2 class="card-month">Жовтень</h2>
+      <p class="card-year">2026</p>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Венера ретроградна з 3 жовтня до 13 листопада (Скорпіон → Терези). Все ще не на часі фарбуватися в темніший. А ще, якщо ви живете за канонами і принципами Марини Астрологівни Гош, а Руслану таки погодили нову зарплатню, не час витрачати великі суми імпульсивно.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>3 жовтня Марс утворює опозицію до Плутона прямо на осі Лев–Водолій — тобто на осі ваших двох Сонць. Енергія пристрасна та інтенсивна, але це «паливо», а не конфлікт. Гарний місяць для чесних розмов — може, Настя нарешті зізнається у страху перед гусями — і для фізичної чи творчої енергії разом. Наприклад, можна придбати найбільшу шафу в Ікеї та складати її як конструктор або пройти цей тест.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Меркурій у ретрограді з 24 жовтня, а отже, підписувати контракти, купувати щось нове й починати щось нове НЕ МОЖНА. Бажано відключити телефон, бо айкью людей навколо почне падати зі швидкістю падіння гривні.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Купити сезонний хеппі міл з іграшкою, щоб Венера хоч якось програлася і не псувала вам настрій просто так.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>The Marías — Cariño</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 3 -->
+  <section class="card" id="m3">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 03 / 12</span>
+        <span class="card-transit">Венера &amp; Меркурій → директні</span>
+      </div>
+      <h2 class="card-month">Листопад</h2>
+      <p class="card-year">2026</p>
+
+      <div class="block">
+        <span class="tag tag--nastya">♒ Настя</span>
+        <p>Венера виходить із ретрограду 13–14 листопада (22° Терезів — це для Насті), і буквально стає легше в питаннях грошей, любові до себе та всіх навколо. Меркурій теж повертається у правильну сторону 13 листопада, а отже, на чорну п'ятницю вже можна купувати щось хароше. Хороший період, щоб надихнутися на щось нове в роботі й провести час із друзями за парочкою пляшечок просекко.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Важливу роль грає Юпітер, що з'єднується з Південним вузлом у Леві 12 листопада. Це гарний момент відпустити те, за що більше не хочеться триматися, і звільнити місце для нового — aka перевірити список підписок на будь-які сервіси або викинути якісь непотрібні речі.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Подивитися один із найкращих епізодів найгеніальнішого сіткому у всесвіті — The One with All the Thanksgivings.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Harry Styles — Late Night Talking</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 4 -->
+  <section class="card" id="m4">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 04 / 12</span>
+        <span class="card-transit">Юпітер ℞ 27° Лева · Сатурн D 7° Овна</span>
+      </div>
+      <h2 class="card-month">Грудень</h2>
+      <p class="card-year">2026</p>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Юпітер стає ретроградним 13 грудня (27° Лева). Тепер ми працюємо з тим, до чого нас привела неймовірна впевненість після одруження з найкращою людиною в галактиці, та закріплюємо результати. На роботі можуть оцінити одну з тисячі офігенних ідей та ініціатив, але ентузіазм визначатиме лише наявність нормальних вихідних у грудні, бо у всіх теж Юпітер у ретрограді, щоб не розслаблялися.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--nastya">♒ Настя</span>
+        <p>Сатурн розвертається у прямий рух 10 грудня (7° Овна). Трошки стає легше після осіннього перегляду внутрішнього й зовнішнього світу, нарешті закінчується весільне похмілля, повертаються дисципліна і стабільність. Хороший місяць, щоб почати вчитися чомусь новому. Сатурн в Овні додає рішучості, тому сміливо можна вибрати нове хобі й знайти нові хороші звички. Hobbyhorsing можна спробувати або ж hobbygooseriding — принцип той самий.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Місяць добре підходить для планів на майбутнє. Дуже добре співпадає з підбиттям підсумків року, а ви і так багато всього зробили (і нічо не робили в ретроградний Меркурій!!!!!!!). Афігенні молодці у 26-му, у 27-му буде краще.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Поставити ялинку раніше звичайного, зібрати друзів на квіз про королеву Єлизавету II і перевірити, хто досі плутає її з першою Лізою.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Florence + The Machine — Dog Days Are Over</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 5 -->
+  <section class="card" id="m5">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 05 / 12</span>
+        <span class="card-transit">Меркурій → Водолій</span>
+      </div>
+      <div class="badges"><span class="badge badge--birthday">✦ З днем народження, Насте!</span></div>
+      <h2 class="card-month">Січень</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--nastya">♒ Настя</span>
+        <p>Меркурій, планета комунікацій та ідей, входить у Водолія. О, вау, спілкування в день народження, астрологія неймовірна! З тобою залишаються нові звички з грудня і велика кількість хорошої енергії від друзів та колег. Оскільки Меркурій у твоєму знаку, ідей буде багато, вони будуть хороші, трохи дивні і дуже переконливі. Головне — не почати пояснювати всім навколо, як саме треба жити, бо не всі ще готові до такого рівня просвітлення.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Ті ідеї, що виникали в грудні, нарешті дають плоди! Юпітер у тригоні до Хірона 3 січня — це про приємне визнання. Визнання рекомендуємо приймати у вигляді грошей паперових та електронних, а також бачити те саме в запропонованому Настею чаї ввечері, наприклад.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Марс доволі войовничий і він йде в ретроград, можуть виникати конфліктні ситуації. Астрологи не радять бути ініціатором конфліктів, бо хто починає сваритись в цей період — той програє. Особливо якщо друга сторона вже відкрила нотатки і записує аргументи.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Передивитись 3 з 7 фільмів франшизи «Поліцейська академія» і записати кружечок у чат квінс оф текстс.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Fleetwood Mac — Everywhere</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 6 -->
+  <section class="card" id="m6">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 06 / 12</span>
+        <span class="card-transit">☉ Затемнення · 17° Водолія</span>
+      </div>
+      <div class="badges"><span class="badge badge--eclipse"><span class="eclipse-icon"></span> Сонячне затемнення</span></div>
+      <h2 class="card-month">Лютий</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--nastya">♒ Настя</span>
+        <p>Головна подія року — сонячне затемнення 6 лютого точно на 17° Водолія, її знак. Це початок нового 18-місячного циклу: новий розділ, сміливе рішення, нова ідентичність. Можна почати щось масштабне, можна різко зрозуміти, чого саме хочеться, а можна просто нарешті зробити те, що відкладалось із літа. Планети не уточнюють, тому вибір за тобою.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Меркурій ретроградний з 9 лютого (Риби), тому обережніше з документами й обіцянками. Разом це місяць, який запам'ятається — небо буквально відкриває нову главу для Насті, а ви це святкуєте. Руслан може відповідати за організацію, Настя — за ідею, але гуси — як завжди, залишаються непередбачуваним фактором.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Загадати бажання, але сформулювати його максимально чітко, бо Меркурій у Рибах любить трактувати все на свій розсуд. По ключам Настя підкаже, вона про.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Kim Carnes — Bette Davis Eyes</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 7 -->
+  <section class="card" id="m7">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 07 / 12</span>
+        <span class="card-transit">Меркурій D · 20° Водолія</span>
+      </div>
+      <h2 class="card-month">Березень</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Меркурій розвертається в прямий рух 3 березня на 20° Водолія. Це принесе більше ясності, допоможе впорядкувати думки й ухвалювати чіткі рішення — особливо у справах, пов'язаних зі знаком Насті. Після лютневого періоду невизначеності стане легше зрозуміти, що саме ви хотіли сказати одне одному, навіщо відкрили той чат і як так сталося, що ви повернулися додому з трьома пачками гречки, коли планували купити одну.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Затухання лютневої інтенсивності, час втілювати те, що народилось на затемненні. Хороший місяць для нових планів, розмов і рішень, які давно висіли десь між «треба» і «потім». А для Руслана — особливо вдалий період, щоб нарешті визначитися з пріоритетами, озвучити свої наміри й перейти від роздумів до дій.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Купити каперсів. Незважаючи на ціну.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Billy Joel — My Life</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 8 -->
+  <section class="card" id="m8">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 08 / 12</span>
+        <span class="card-transit">Марс D 20° Лева · Юпітер D 17° Лева</span>
+      </div>
+      <h2 class="card-month">Квітень</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Марс нарешті стає прямим 1 квітня (20° Лева) — енергія й ініціатива вивільняються повністю. 13 квітня Юпітер стає прямим на 17° Лева — майже точно на його натальному Сонці. Це особистий пік місяця для нього: удача, видимість, шанс.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Юпітер у тригоні до Сатурна 3 квітня — успіх, який має під собою міцний фундамент. Тобто все, що ви вже обдумали/проговорили на початку року, може нарешті дати результат. Дуже «його» місяць — гарний час підтримати, відсвяткувати, дати йому spotlight, на який він заслуговує. Але бажано не все світло одразу, бо левʼяча натура, може ще звикнути.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Поїсти щось з картоплею.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>The Cardigans — Lovefool</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 9 -->
+  <section class="card" id="m9">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 09 / 12</span>
+        <span class="card-transit">Плутон ℞ · 7° Водолія</span>
+      </div>
+      <h2 class="card-month">Травень</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--nastya">♒ Настя</span>
+        <p>Плутон стає ретроградним 8 травня майже точно на Настиному градусі — 7° Водолія. Це глибока й тиха точка внутрішньої трансформації, спрямована на зміцнення себе зсередини. Можна багато чого переосмислити, відкрити в собі щось нове й навіть вирішити, що деякі старі звички більше не мають права на існування.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>А є подвох? Звісно: Плутон просто натискає «скасувати» на всіх рішеннях, які ми ухвалили до 8 травня. Хороший місяць для чесних розмов про те, ким кожен із вас стає. Не обов'язково одразу відповідати на всі питання, можна просто поговорити й потім разом подивитися щось легке.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Сходити на побачення і завершити вечір шотом лімончелло.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Lorde — Solar Power</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 10 -->
+  <section class="card" id="m10">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 10 / 12</span>
+        <span class="card-transit">Меркурій ℞ · Рак</span>
+      </div>
+      <h2 class="card-month">Червень</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Меркурій ретроградний з 10 червня (Рак) — теми дому, родини, спільного побуту варто обговорювати повільно й дбайливо. Не обов'язково сваритися через чашку, яка стоїть не там. Але якщо чашка стоїть не там уже третій рік, то, можливо, це вже не Меркурій.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Уран у секстилі до Нептуна (6 червня) — мрії та практичні кроки співпадають. Гарний час планувати спільне майбутнє: дім, подорож, спільний проєкт або хоча б список місць, куди ви хочете сходити, але чомусь кожного разу опиняєтесь у тому самому.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Подивитися свіжий кліп дороша.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Led Zeppelin — The Ocean (чи дорош)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 11 -->
+  <section class="card" id="m11">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 11 / 12</span>
+        <span class="card-transit">Юпітер → Діва</span>
+      </div>
+      <h2 class="card-month">Липень</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Юпітер утворює третій точний тригон із Сатурном (12 липня), а 26 липня переходить у Діву — його «рік Лева» завершується підбиттям підсумків: усе, що зростало весь рік, тепер стає відчутним результатом.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Місяць врожаю — гарний час озирнутися на рік і побачити, скільки насправді вдалося. Іноді результатом є щось велике, а іноді — просто те, що ви не посварилися через дрібʼязкову штуку, або не зустріли гусей. Це теж результат, між іншим.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Більше ходити, менше працювати і бути у приміщеннях з кондиціонером.</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>girl in red — Serotonin</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTH 12 -->
+  <section class="card" id="m12">
+    <div class="card-frame">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="card-top">
+        <span class="card-index">Карта 12 / 12</span>
+        <span class="card-transit">☉ 9° Лева · ☾ 24° Водолія</span>
+      </div>
+      <div class="badges">
+        <span class="badge badge--birthday">✦ З днем народження, Руслане!</span>
+        <span class="badge badge--eclipse"><span class="eclipse-icon"></span> Подвійне затемнення</span>
+      </div>
+      <h2 class="card-month">Серпень</h2>
+      <p class="card-year">2027</p>
+
+      <div class="block">
+        <span class="tag tag--ruslan">♌ Руслан</span>
+        <p>Головна подія — повне сонячне затемнення 2 серпня на 9° Лева, найдовша тотальність цього століття для суходолу. Максимальна видимість, визнання, кульмінаційний момент. Усе, що відбувалось протягом року, може зібратися в одну велику картинку, де Руслан нарешті стоїть у центрі, як і передбачали планети та, можливо, він сам.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--nastya">♒ Настя</span>
+        <p>17 серпня — місячне затемнення на 24° Водолія, що закриває її лютневий цикл. Те, що почалося як новий розділ, тепер може показати, куди воно взагалі вело.</p>
+      </div>
+
+      <div class="block">
+        <span class="tag tag--razom">Разом</span>
+        <p>Красивий фінал. Рік починався з опозиції на вашій спільній осі (жовтень), а закінчується тим, що небо освітлює по черзі кожного з вас в один і той самий місяць. Дуже символічно. І дуже зручно, бо святкування можна організувати одне.</p>
+      </div>
+
+      <div class="divider"></div>
+      <div class="strip">
+        <div class="strip-label">✦ Порада місяця</div>
+        <p>Зробити фото, де обидва добре вийшли, та закинути його у чат весілля (нагадайте нам які ви гарні).</p>
+      </div>
+      <div class="strip soundtrack">
+        <div class="strip-label">♪ Саундтрек місяця</div>
+        <p>Jeff Buckley — Lover, You Should've Come Over</p>
+      </div>
+
+      <p class="credit">♒ ✦ ♌ — на все добре, з любов'ю до зірок</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var months = [
+    {id:'m1', label:'Вересень 2026'},
+    {id:'m2', label:'Жовтень 2026'},
+    {id:'m3', label:'Листопад 2026'},
+    {id:'m4', label:'Грудень 2026'},
+    {id:'m5', label:'Січень 2027'},
+    {id:'m6', label:'Лютий 2027'},
+    {id:'m7', label:'Березень 2027'},
+    {id:'m8', label:'Квітень 2027'},
+    {id:'m9', label:'Травень 2027'},
+    {id:'m10', label:'Червень 2027'},
+    {id:'m11', label:'Липень 2027'},
+    {id:'m12', label:'Серпень 2027'}
+  ];
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var nav = document.getElementById('moonNav');
+  var root = document.getElementById('scrollRoot');
+
+  var buttons = {};
+
+  months.forEach(function(m, i){
+    var shift = Math.cos((i / (months.length - 1)) * Math.PI) * 100;
+    var btn = document.createElement('button');
+    btn.className = 'moon-dot';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', m.label);
+    var disc = document.createElement('span');
+    disc.className = 'moon-disc';
+    disc.style.setProperty('--shift', shift + '%');
+    btn.appendChild(disc);
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(m.id);
+      if(target){
+        target.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block:'start'});
+      }
+    });
+    nav.appendChild(btn);
+    buttons[m.id] = btn;
+  });
+
+  var sections = months.map(function(m){ return document.getElementById(m.id); });
+
+  if('IntersectionObserver' in window){
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting && entry.intersectionRatio >= 0.5){
+          Object.keys(buttons).forEach(function(id){
+            buttons[id].classList.toggle('active', id === entry.target.id);
+          });
+        }
+      });
+    }, {root: root, threshold:[0.5]});
+
+    sections.forEach(function(s){ if(s) observer.observe(s); });
+  }
+})();
+</script>
+
+</body>
+</html>
